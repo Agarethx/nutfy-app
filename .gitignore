@@ -1,0 +1,29 @@
+node_modules/
+.expo/
+dist/
+web-build/
+build/
+
+# Variables de entorno — nunca subir al repositorio
+.env
+.env.local
+.env.production
+
+# Supabase local
+.supabase/
+
+# iOS / Android
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+android/
+ios/
+
+# Expo
+expo-env.d.ts
+
+# macOS
+.DS_Store

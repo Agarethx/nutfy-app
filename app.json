@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Nutrition AI",
+    "slug": "nutrition-ai",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "nutrition-ai",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.176lab.nutritionai"
+    },
+    "android": {
+      "package": "com.lab176.nutritionai",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "resizeMode": "contain"
+        }
+      ],
+      "expo-font",
+      "expo-secure-store",
+      "expo-updates",
+      "expo-asset"
+    ],
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
