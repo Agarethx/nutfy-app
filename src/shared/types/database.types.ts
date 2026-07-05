@@ -542,6 +542,303 @@ export type Database = {
           },
         ]
       }
+      meal_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          meal_slot_id: string
+          position: number
+          recipe_id: string
+          servings: number
+          source: Database["public"]["Enums"]["assignment_source"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meal_slot_id: string
+          position?: number
+          recipe_id: string
+          servings: number
+          source?: Database["public"]["Enums"]["assignment_source"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meal_slot_id?: string
+          position?: number
+          recipe_id?: string
+          servings?: number
+          source?: Database["public"]["Enums"]["assignment_source"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_assignments_meal_slot_id_fkey"
+            columns: ["meal_slot_id"]
+            isOneToOne: false
+            referencedRelation: "meal_slots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_assignments_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plan_constraints: {
+        Row: {
+          constraint_type: Database["public"]["Enums"]["constraint_type"]
+          created_at: string
+          hardness: Database["public"]["Enums"]["constraint_hardness"]
+          id: string
+          macro_goal_value: Database["public"]["Enums"]["macro_goal"] | null
+          meal_plan_id: string
+          numeric_value: number | null
+          text_value: string | null
+          updated_at: string
+        }
+        Insert: {
+          constraint_type: Database["public"]["Enums"]["constraint_type"]
+          created_at?: string
+          hardness?: Database["public"]["Enums"]["constraint_hardness"]
+          id?: string
+          macro_goal_value?: Database["public"]["Enums"]["macro_goal"] | null
+          meal_plan_id: string
+          numeric_value?: number | null
+          text_value?: string | null
+          updated_at?: string
+        }
+        Update: {
+          constraint_type?: Database["public"]["Enums"]["constraint_type"]
+          created_at?: string
+          hardness?: Database["public"]["Enums"]["constraint_hardness"]
+          id?: string
+          macro_goal_value?: Database["public"]["Enums"]["macro_goal"] | null
+          meal_plan_id?: string
+          numeric_value?: number | null
+          text_value?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_constraints_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plan_days: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          meal_plan_id: string
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          meal_plan_id: string
+          position: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          meal_plan_id?: string
+          position?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_days_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plan_shopping_snapshot_items: {
+        Row: {
+          created_at: string
+          id: string
+          ingredient_id: string
+          recipe_count: number
+          snapshot_id: string
+          total_quantity: number
+          unit_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ingredient_id: string
+          recipe_count: number
+          snapshot_id: string
+          total_quantity: number
+          unit_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ingredient_id?: string
+          recipe_count?: number
+          snapshot_id?: string
+          total_quantity?: number
+          unit_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_shopping_snapshot_items_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "ingredients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_shopping_snapshot_items_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plan_shopping_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_shopping_snapshot_items_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plan_shopping_snapshots: {
+        Row: {
+          generated_at: string
+          id: string
+          meal_plan_id: string
+          plan_signature: string
+          status: Database["public"]["Enums"]["snapshot_status"]
+          user_id: string
+          version: number
+        }
+        Insert: {
+          generated_at?: string
+          id?: string
+          meal_plan_id: string
+          plan_signature: string
+          status?: Database["public"]["Enums"]["snapshot_status"]
+          user_id: string
+          version: number
+        }
+        Update: {
+          generated_at?: string
+          id?: string
+          meal_plan_id?: string
+          plan_signature?: string
+          status?: Database["public"]["Enums"]["snapshot_status"]
+          user_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_shopping_snapshots_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plans: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          id: string
+          name: string
+          notes: string | null
+          status: Database["public"]["Enums"]["meal_plan_status"]
+          updated_at: string
+          user_id: string
+          week_start_date: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["meal_plan_status"]
+          updated_at?: string
+          user_id: string
+          week_start_date: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["meal_plan_status"]
+          updated_at?: string
+          user_id?: string
+          week_start_date?: string
+        }
+        Relationships: []
+      }
+      meal_slots: {
+        Row: {
+          created_at: string
+          id: string
+          meal_plan_day_id: string
+          meal_type: Database["public"]["Enums"]["meal_type"]
+          notes: string | null
+          position: number
+          slot_kind: Database["public"]["Enums"]["slot_kind"]
+          target_servings: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meal_plan_day_id: string
+          meal_type: Database["public"]["Enums"]["meal_type"]
+          notes?: string | null
+          position?: number
+          slot_kind?: Database["public"]["Enums"]["slot_kind"]
+          target_servings?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meal_plan_day_id?: string
+          meal_type?: Database["public"]["Enums"]["meal_type"]
+          notes?: string | null
+          position?: number
+          slot_kind?: Database["public"]["Enums"]["slot_kind"]
+          target_servings?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_slots_meal_plan_day_id_fkey"
+            columns: ["meal_plan_day_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plan_days"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       micronutrients: {
         Row: {
           category: Database["public"]["Enums"]["micronutrient_category"]
@@ -1136,6 +1433,7 @@ export type Database = {
       }
     }
     Enums: {
+      assignment_source: "MANUAL" | "AI_SUGGESTED" | "TEMPLATE"
       attribute_category:
         | "DIETARY"
         | "LIFESTYLE"
@@ -1144,6 +1442,14 @@ export type Database = {
         | "ALLERGEN_FREE"
         | "OTHER"
       attribute_scope: "INGREDIENT" | "RECIPE" | "BOTH"
+      constraint_hardness: "HARD" | "SOFT"
+      constraint_type:
+        | "MAX_COOK_TIME_MIN"
+        | "MAX_ACTIVE_TIME_MIN"
+        | "MACRO_GOAL"
+        | "PREFER_CUISINE"
+        | "AVOID_INGREDIENT"
+        | "MAX_BUDGET_TOTAL"
       cooking_method:
         | "RAW"
         | "BAKE"
@@ -1163,9 +1469,20 @@ export type Database = {
       difficulty_level: "EASY" | "MEDIUM" | "HARD" | "EXPERT"
       duration_unit: "DAYS" | "WEEKS" | "MONTHS"
       lifecycle_status: "ACTIVE" | "PENDING_REVIEW" | "DEPRECATED"
+      macro_goal:
+        | "HIGH_PROTEIN"
+        | "LOW_CALORIE"
+        | "LOW_CARB"
+        | "HIGH_FIBER"
+        | "MUSCLE_GAIN"
+        | "BALANCED"
+      meal_plan_status: "DRAFT" | "ACTIVE" | "FINALIZED" | "ARCHIVED"
+      meal_type: "breakfast" | "lunch" | "dinner" | "snack"
       measurement_system: "METRIC" | "IMPERIAL" | "UNIVERSAL"
       micronutrient_category: "VITAMIN" | "MINERAL" | "OTHER"
       override_type: "ADD" | "REMOVE" | "REPLACE" | "ADJUST_QUANTITY"
+      slot_kind: "COOK_AT_HOME" | "EAT_OUT" | "LEFTOVERS" | "SKIP"
+      snapshot_status: "ACTIVE" | "SUPERSEDED"
       storage_method_type:
         | "FRIDGE"
         | "FREEZER"
@@ -1301,6 +1618,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      assignment_source: ["MANUAL", "AI_SUGGESTED", "TEMPLATE"],
       attribute_category: [
         "DIETARY",
         "LIFESTYLE",
@@ -1310,6 +1628,15 @@ export const Constants = {
         "OTHER",
       ],
       attribute_scope: ["INGREDIENT", "RECIPE", "BOTH"],
+      constraint_hardness: ["HARD", "SOFT"],
+      constraint_type: [
+        "MAX_COOK_TIME_MIN",
+        "MAX_ACTIVE_TIME_MIN",
+        "MACRO_GOAL",
+        "PREFER_CUISINE",
+        "AVOID_INGREDIENT",
+        "MAX_BUDGET_TOTAL",
+      ],
       cooking_method: [
         "RAW",
         "BAKE",
@@ -1330,9 +1657,21 @@ export const Constants = {
       difficulty_level: ["EASY", "MEDIUM", "HARD", "EXPERT"],
       duration_unit: ["DAYS", "WEEKS", "MONTHS"],
       lifecycle_status: ["ACTIVE", "PENDING_REVIEW", "DEPRECATED"],
+      macro_goal: [
+        "HIGH_PROTEIN",
+        "LOW_CALORIE",
+        "LOW_CARB",
+        "HIGH_FIBER",
+        "MUSCLE_GAIN",
+        "BALANCED",
+      ],
+      meal_plan_status: ["DRAFT", "ACTIVE", "FINALIZED", "ARCHIVED"],
+      meal_type: ["breakfast", "lunch", "dinner", "snack"],
       measurement_system: ["METRIC", "IMPERIAL", "UNIVERSAL"],
       micronutrient_category: ["VITAMIN", "MINERAL", "OTHER"],
       override_type: ["ADD", "REMOVE", "REPLACE", "ADJUST_QUANTITY"],
+      slot_kind: ["COOK_AT_HOME", "EAT_OUT", "LEFTOVERS", "SKIP"],
+      snapshot_status: ["ACTIVE", "SUPERSEDED"],
       storage_method_type: [
         "FRIDGE",
         "FREEZER",

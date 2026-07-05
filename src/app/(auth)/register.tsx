@@ -8,37 +8,69 @@ import { Typography, Button, Input } from '@/shared/components/ui'
 import { supabase } from '@/shared/services/supabase'
 import { mapAuthError } from '@/shared/utils/supabase-auth-error'
 import { getErrorMessage } from '@/shared/utils/error-messages'
-import { loginSchema, type LoginFormValues } from '@/shared/validation/auth.schema'
+import { registerSchema, type RegisterFormValues } from '@/shared/validation/auth.schema'
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const router = useRouter()
   const [formError, setFormError] = useState<string | null>(null)
+  const [pendingConfirmation, setPendingConfirmation] = useState(false)
 
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { email: '', password: '', confirmPassword: '' },
   })
 
-  async function onSubmit(values: LoginFormValues) {
+  async function onSubmit(values: RegisterFormValues) {
     setFormError(null)
-    const { error } = await supabase.auth.signInWithPassword(values)
+    const { data, error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+    })
     if (error) {
       setFormError(getErrorMessage(mapAuthError(error)))
+      return
     }
-    // Si no hay error, AuthProvider actualiza la sesión y app/index.tsx redirige.
+    // Si el proyecto de Supabase tiene confirmación de correo activada
+    // (en local está desactivada — config.toml [auth.email] enable_confirmations),
+    // signUp no entrega sesión hasta que el usuario confirma. AuthProvider solo
+    // redirige cuando hay sesión, así que mostramos este mensaje en vez de
+    // navegar cuando data.session es null.
+    if (!data.session) {
+      setPendingConfirmation(true)
+    }
+    // Si hay sesión, AuthProvider la detecta y app/index.tsx redirige a (tabs).
+  }
+
+  if (pendingConfirmation) {
+    return (
+      <Screen className="items-center justify-center px-8">
+        <Typography variant="h3" className="text-center">
+          Revisa tu correo
+        </Typography>
+        <Typography variant="body" className="mt-2 text-center text-neutral-500">
+          Te enviamos un enlace de confirmación. Ábrelo para activar tu cuenta.
+        </Typography>
+        <Button
+          label="Volver a iniciar sesión"
+          variant="secondary"
+          className="mt-6"
+          onPress={() => router.replace('/(auth)/login')}
+        />
+      </Screen>
+    )
   }
 
   return (
     <Screen scroll className="px-6">
       <View className="flex-1 justify-center gap-6 py-12">
         <View className="gap-1">
-          <Typography variant="h2">Iniciar sesión</Typography>
+          <Typography variant="h2">Crear cuenta</Typography>
           <Typography variant="body" className="text-neutral-500">
-            Bienvenido de nuevo a Nutrition AI
+            Empieza a planificar tu alimentación con IA
           </Typography>
         </View>
 
@@ -67,7 +99,7 @@ export default function LoginScreen() {
               <Input
                 label="Contraseña"
                 autoCapitalize="none"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 secureTextEntry
                 value={value}
                 onChangeText={onChange}
@@ -77,13 +109,22 @@ export default function LoginScreen() {
             )}
           />
 
-          <Typography
-            variant="label"
-            className="self-end text-primary-600"
-            onPress={() => router.push('/(auth)/forgot-password')}
-          >
-            ¿Olvidaste tu contraseña?
-          </Typography>
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Confirmar contraseña"
+                autoCapitalize="none"
+                autoComplete="new-password"
+                secureTextEntry
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.confirmPassword?.message}
+              />
+            )}
+          />
         </View>
 
         {formError && (
@@ -93,7 +134,7 @@ export default function LoginScreen() {
         )}
 
         <Button
-          label="Iniciar sesión"
+          label="Crear cuenta"
           onPress={handleSubmit(onSubmit)}
           loading={isSubmitting}
           fullWidth
@@ -102,14 +143,14 @@ export default function LoginScreen() {
 
         <View className="flex-row justify-center gap-1">
           <Typography variant="body" className="text-neutral-500">
-            ¿No tienes cuenta?
+            ¿Ya tienes cuenta?
           </Typography>
           <Typography
             variant="body"
             className="font-semibold text-primary-600"
-            onPress={() => router.push('/(auth)/register')}
+            onPress={() => router.push('/(auth)/login')}
           >
-            Regístrate
+            Inicia sesión
           </Typography>
         </View>
       </View>
